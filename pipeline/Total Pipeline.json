@@ -1,0 +1,208 @@
+{
+	"name": "Total Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Agency Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CSV to SQL Agency",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Emp Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CSV to SQL Emp",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Title Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CSV to SQL Title",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Payroll 2020 Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Agency Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Emp Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Title Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CSV to SQL Payroll 2020",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Payroll 2021 Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Agency Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Emp Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Title Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "CSV to SQL Payroll 2021",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Datat Summary Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Payroll 2021 Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Payroll 2020 Flow",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "Data Summarization",
+						"type": "DataFlowReference",
+						"parameters": {
+							"dataflow_param_fiscalyear": "2020"
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-07-22T03:44:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

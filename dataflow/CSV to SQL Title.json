@@ -1,0 +1,50 @@
+{
+	"name": "CSV to SQL Title",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dbTitleCsv",
+						"type": "DatasetReference"
+					},
+					"name": "titleSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dbTitleSql",
+						"type": "DatasetReference"
+					},
+					"name": "titleSink"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> titleSource",
+				"titleSource sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> titleSink"
+			]
+		}
+	}
+}
